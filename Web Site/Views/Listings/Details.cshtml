@@ -1,0 +1,186 @@
+﻿@using Web_Site.Classes
+@model Web_Site.Models.Listings
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Listings</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.Category)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Town)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Town.Town)
+        </dd>
+
+        <dt>
+            @Html.Label("Photo")
+        </dt>
+
+        <dd>
+            @if (Model.Files.Count > 0)
+            {
+                var file = Model.Files.FirstOrDefault(f => f.FileId > 0);
+                <div class="imagePhoto">
+                    <img src="~/File?id=@file.FileId" />
+                </div>
+            }
+            else
+            {
+                <i>No uploaded photo</i>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+
+        <dd>
+            <textarea class="form-control text-box multi-line valid" disabled="disabled" rows="20">@Html.DisplayFor(model => model.Body)</textarea>
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Author.Email)
+        </dt>
+
+        <dd>
+            @if (Model.Author == null)
+            {
+                <i>(No Email)</i>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.Author.Email)
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactNumber)
+        </dt>
+
+        <dd>
+            @if (Model.ContactNumber == null)
+            {
+                <i>(Is not provided contact number)</i>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.ContactNumber)
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+
+        <dd>
+            @if (Model.Author != null)
+            {
+                @Model.Author.UserName
+            }
+            else
+            {
+                <i>(No Author)</i>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+    <div>
+        @if (Model.Files.Count > 0)
+        {
+            <p>
+                <b>@Html.DisplayNameFor(model => model.Files)</b>
+            </p>
+            <br />
+            foreach (var file in Model.Files)
+            {
+                <div class="imageDiv">
+                    <a href="javascript:;" onClick="ShowPopup(@file.FileId)">
+                        <img src="~/File?id=@file.FileId" />
+                    </a>  
+                </div>
+                <br />
+            }
+        }
+        else
+        {
+            @Html.Label("No Uploaded Images", new { @class = "control-label col-md-2" })
+            <br />
+        }
+    </div>
+    <div class="comments-details">
+        <h1>Comments</h1>
+        @if (Model.Comments.Count > 0)
+            {
+                foreach (var c in Model.Comments)
+                {
+                <div class="comments-box">
+                    @if (c.Author != null)
+                    {
+                        <h3>@c.Author.FullName</h3>
+                        <i>Commented on @c.Date</i>
+                    }
+                    else
+                    {
+                        <h3>No Author</h3>
+                        <i>Commented on @c.Date</i>
+                    }
+                    
+                    <div id="comment_text">
+                        <p>@c.Text</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <i>(No Comments)</i>
+        }
+    </div>
+</div>
+<p>
+    @if (User.IsInRole("Admin") || User.Identity.Name == Model.Author.UserName)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) @:|
+        @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) @:|
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>

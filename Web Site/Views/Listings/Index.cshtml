@@ -1,0 +1,95 @@
+﻿@using Web_Site.Classes
+@model IEnumerable<Web_Site.Models.Listings>
+
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Listings</h2>
+
+<p>
+    @using (Html.BeginForm("Index", "Listings", FormMethod.Get))
+    {
+        <b>Search by: </b>@Html.RadioButton("searchBy", "Title", true) <text>Title</text>
+        @Html.RadioButton("searchBy", "Author")
+        <text>Author's UserName</text>
+        @Html.RadioButton("searchBy", "Town") <text>Town</text>
+        <br />
+        @Html.TextBox("search") <input type="submit" value="Search" />
+    }
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Body)
+        </th>
+        <th>
+           @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comments)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Town)
+        </th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Utils.CutText(item.Body)
+            </td>
+            <td>
+                <a href="/Listings/SelectedCategorie/@item.CategoryId" >@item.Category.Category</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @if (item.Author != null)
+                {
+                    @item.Author.UserName
+                    if (item.Author.FullName != null)
+                    {
+                        <br />
+                        <i>(@item.Author.FullName)</i>
+                    }
+                }
+                else
+                {
+                    <i>(No Author)</i>
+                }
+            </td>
+            <td class="comment_col">
+                @if (item.Comments.Count > 0)
+                {
+                    <div>@item.Comments.Count</div>
+                }
+                else
+                {
+                    <i>(No Comments)</i>
+                }
+            </td>
+            <td>
+                <a href="/Listings/SortingByTown/@item.TownId">@item.Town.Town</a>
+            </td>
+            <td align="center">
+                @{ var data = new ItemIdAuthor { ItemId = item.Id, Author = item.Author.UserName }; }
+                @Html.Partial("ActionMenu", data)
+            </td>
+        </tr>
+    }
+</table>

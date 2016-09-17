@@ -1,0 +1,63 @@
+﻿@using Web_Site.Classes
+@model IEnumerable<Web_Site.Models.Listings>
+
+@{
+    ViewBag.Title = "My Ads";
+}
+
+<h2>My Ads</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", "Listings")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Body)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th>Actions</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Utils.CutText(item.Body)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.Category)
+        </td>
+        <td align="center">
+            @{ var data = new ItemIdAuthor { ItemId = item.Id, Author = item.Author.UserName }; }
+            @Html.Partial("ActionMenu", data)
+        </td>
+    </tr>
+}
+
+</table>

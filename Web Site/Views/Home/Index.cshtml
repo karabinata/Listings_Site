@@ -1,0 +1,46 @@
+﻿@using System.IO;
+@using System;
+@using Web_Site.Classes
+@{
+    ViewBag.Title = "Home Page";
+}
+@model IEnumerable<Web_Site.Models.Listings>
+
+<div class="jumbotron">
+    <a href="@Url.Action("Index", "Listings")">
+        <img id="img" src="/Content/Images/excursions.jpg"/>
+    </a>
+</div>
+
+
+
+<div style="font-family:Oswald" class="last-listings">Last Listings </div>
+<div class="listings-background">
+    <section class="home row">
+        <div class="posts row">
+        @foreach (var list in Model)
+        {
+            <article class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    @{
+                        if (list.Files.Count > 0)
+                        {
+                            var imgFile = list.Files.FirstOrDefault(l => l.FileId > 0).FileId;
+                            <img src="~/File?id=@imgFile" alt="@list.Title">
+                        }
+                        else
+                        {
+                            <img src="../../Content/Images/no-image.png"/>
+                        }
+                    }
+                         <div class="caption">
+                        <h3>@list.Title</h3>
+                        <p>@Web_Site.Classes.Utils.CutText(list.Body,40)</p>
+                        <p><a href="@Url.Action("Details", "Listings", new { id = list.Id})" class="btn btn-info" role="button">More info</a>
+                    </div>
+                </div>
+            </article>
+        }
+        </div>
+    </section>
+</div>
